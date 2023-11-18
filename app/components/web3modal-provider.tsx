@@ -1,27 +1,24 @@
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
+import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 
-import { WagmiConfig } from 'wagmi'
-import { arbitrum, mainnet } from 'wagmi/chains'
+import { WagmiConfig } from "wagmi";
+import { arbitrum, mainnet } from "wagmi/chains";
 
-const projectId = process.env.NEXT_PUBLIC_WC_ID || 'test-project-id'
+const projectId =
+  process.env.NEXT_PUBLIC_WC_ID || "cd3a12f1a3078a424cb70fe790dabdaa";
 
 const metadata = {
-  name: 'Web3Modal',
-  description: 'Web3Modal Example',
-  url: 'https://web3modal.com',
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
-}
+  name: "Web3Modal",
+  description: "Web3Modal Example",
+  url: "https://web3modal.com",
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
 
-const chains = [mainnet, arbitrum]
-const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
+const chains = [mainnet, arbitrum];
+const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 console.log(wagmiConfig);
 
-createWeb3Modal({ wagmiConfig, projectId, chains })
+createWeb3Modal({ wagmiConfig, projectId, chains });
 
 export function Web3ModalProvider({ children }) {
-  return (
-    <WagmiConfig config={wagmiConfig}>
-      {children}
-    </WagmiConfig>
-  )
+  return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
 }
