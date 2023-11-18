@@ -12,7 +12,7 @@ model User {
   handle        String?
   lensId        String?
   riskScore     Float?
-  ristLevel     String?
+  riskLevel     String?
   location      String?
   holdings      Holdings[]
 }

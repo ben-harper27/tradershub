@@ -1,6 +1,8 @@
 import { type NextRequest } from 'next/server'
 import { CovalentClient } from "@covalenthq/client-sdk";
 import {default as prisma} from '@/lib/prisma';
+import fetch from 'node-fetch';
+
  
 export async function POST(request: Request) {
     const res = await request.json()
@@ -9,13 +11,19 @@ export async function POST(request: Request) {
         for (const wallet of data.wallets) {
             if(process.env.COVALENT_KEY) {
                 // todo: check if user exists
-                            
-                // if not, create them
-                const user = await prisma.User.create({
-                    data: {
+                let user = await prisma.User.findUnique({
+                    where: {
                         wallet: wallet
                     }
                 });
+                // if not, create them
+                if (!user) {
+                    user = await prisma.User.create({
+                        data: {
+                            wallet: wallet
+                        }
+                    });
+                }
                 const client = new CovalentClient(process.env.COVALENT_KEY);
                 const resp = await client.BalanceService.getHistoricalPortfolioForWalletAddress("eth-mainnet", wallet, {"quoteCurrency": "USD","days": 30});
                 
@@ -32,6 +40,60 @@ export async function POST(request: Request) {
                         });
                     }
                 }
+
+                // Fetch risk score and risk profile from Spectral Finance API
+                const spectralResponse = await fetch(
+                    `https://api.spectral.finance/api/v1/addresses/${wallet}/calculate_score`,
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${process.env.SPECTRAL_API_KEY}`,
+                      },
+                      method: "POST",
+                    },
+                  );
+ 
+                 if (!spectralResponse.ok) {
+                    console.log(spectralResponse.statusText, {
+                      status: spectralResponse.status,
+                    });
+                  }
+                  const spectralScoreResponse = await fetch(
+                    `https://api.spectral.finance/api/v1/addresses/${wallet}`,
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${process.env.SPECTRAL_API_KEY}`,
+                      },
+                      method: "GET",
+                    },
+                  );
+                
+                  if (!spectralScoreResponse.ok) {
+                    console.log(spectralResponse.statusText, {
+                      status: spectralResponse.status,
+                    });
+                  }
+                
+                  const spectralData = await spectralScoreResponse.json();
+                  console.log(spectralData);
+                
+                  if (!spectralData) {
+                    return new Response("Score could not be calculated", { status: 404 });
+                  }
+
+                  // Assuming the risk score and risk profile are stored in the user model
+                 if(spectralData.score && spectralData.risk_level) {
+                    await prisma.User.update({
+                        where: { uid: user.uid },
+                        data: {
+                            riskScore: spectralData.score,
+                            riskLevel: spectralData.risk_level
+                        }
+                    });
+                }
+
+                  
             }
         }
         return Response.json({ 'Status': 'success' })
