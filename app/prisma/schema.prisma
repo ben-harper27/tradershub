@@ -12,14 +12,14 @@ model User {
   handle        String?
   lensId        String?
   riskScore     Float?
-  ristLevel     String?
+  riskLevel     String?
   location      String?
   holdings      Holdings[]
 }
 
 model Holdings {
   hid           String    @default(uuid()) @id
-  user          User  @relation(fields: [userId], references: [uid])
+  user          User      @relation(fields: [userId], references: [uid])
   userId        String
   ticker        String
   value0d       Float
