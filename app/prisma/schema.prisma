@@ -19,7 +19,7 @@ model User {
 
 model Holdings {
   hid           String    @default(uuid()) @id
-  user          User  @relation(fields: [userId], references: [uid])
+  user          User      @relation(fields: [userId], references: [uid])
   userId        String
   ticker        String
   value0d       Float
