@@ -1,11 +1,12 @@
 import { CovalentClient } from "@covalenthq/client-sdk";
 import { default as prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
 const client = new CovalentClient(
   process.env.COVALENT_KEY || "cqt_rQgT9BXRBDhgX9MFXWryww6Dfj8q"
 );
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { wallets } = await request.json();
   if (wallets) {
     const usersCreated: string[] = [];
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
         }
       }
     }
-    return Response.json({
+    return NextResponse.json({
         "status": "success",
         "message": "Processed wallet data successfully",
         "details": {
@@ -52,5 +53,5 @@ export async function POST(request: Request) {
         }
       }, { status: 201 });
   }
-  return Response.json({ Status: "Failed. No wallets" }, { status: 400 });
+  return NextResponse.json({ Status: "Failed. No wallets" }, { status: 400 });
 }
