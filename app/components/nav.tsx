@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react';
 import { Button } from '@/components/ui/button'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
@@ -8,11 +9,28 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { ModeToggle } from '@/components/dropdown'
 import { ChevronRight, Droplets, LogOut } from "lucide-react"
+import { initPush } from './usePushApi'
+import { useEthersSigner } from './walletClientToSigner'
+import { SendNotification } from './SendNotification';
 
 export function Nav() {
   const { open } = useWeb3Modal()
   const { address } = useAccount()
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const signer = useEthersSigner();
+
+  const [pushApi, setPushApi] = React.useState<any>();
+
+  const setPush = async (signer) => {
+    if (signer) {
+      const api = await initPush(signer);
+      setPushApi(api);
+    }
+  }
+
+  // React.useEffect(() => {
+  //   setPush(signer);
+  // }, [signer]);
 
   return (
     <nav className='
@@ -64,6 +82,23 @@ export function Nav() {
           )
         }
         
+        { !pushApi && (
+            <Button onClick={() => {
+                setPush(signer);
+              }}>
+              Subscribe to Notifications
+            </Button>
+          ) 
+        }
+        {
+          pushApi && (
+            <Button onClick={() => {
+              SendNotification(pushApi);
+            }}>
+              Send Notification
+            </Button>
+          )
+        }
         <ModeToggle />
       </div>
     </nav>
