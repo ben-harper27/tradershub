@@ -45,7 +45,7 @@ async def healthcheck():
 
 @app.post("/endpoint")
 async def endpoint(request: Request):
-    await requests.post("https://api.defender.openzeppelin.com/autotasks/89b4fd9f-eb04-41dd-9a81-25f0aa0e6b45/runs/webhook/4cf24c64-35d2-414e-a80b-5e252c1ca2bd/G3hPgcGdXt2adf3NzJe1K7",
+    request = requests.post("https://api.defender.openzeppelin.com/autotasks/89b4fd9f-eb04-41dd-9a81-25f0aa0e6b45/runs/webhook/4cf24c64-35d2-414e-a80b-5e252c1ca2bd/G3hPgcGdXt2adf3NzJe1K7",
                         {"client": "0x92F44219c346675508fF779eCAeC2f17bdC3BAf5", "tokenIn": "0x6Cb348582A964bDF305C70554383b90490EE61dB",
                          "tokenOut": "0x8e0bDB72bF44C13C6aD007f8E7aC47bafE69faC2", "amountIn": "10000000000"}
     )
