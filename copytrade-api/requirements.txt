@@ -1,0 +1,8 @@
+fastapi==0.75.0
+hypercorn==0.13.2
+aiofiles==0.8.0
+python-multipart==0.0.5
+aiohttp[speedups]==3.8.1
+pydantic==1.8.2
+httpx==0.22.0
+requests
