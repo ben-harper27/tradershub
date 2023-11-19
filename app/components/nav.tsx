@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
@@ -18,6 +19,9 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image";
+import { initPush } from './usePushApi'
+import { useEthersSigner } from './walletClientToSigner'
+import { SendNotification } from './SendNotification';
 
 export function Nav() {
   const { execute: logoutLens } = useLogout();
@@ -92,6 +96,20 @@ export function Nav() {
       </Button>
     );
   }
+  const signer = useEthersSigner();
+
+  const [pushApi, setPushApi] = React.useState<any>();
+
+  const setPush = async (signer) => {
+    if (signer) {
+      const api = await initPush(signer);
+      setPushApi(api);
+    }
+  }
+
+  // React.useEffect(() => {
+  //   setPush(signer);
+  // }, [signer]);
 
   return (
     <nav
@@ -151,7 +169,7 @@ export function Nav() {
               href="/profile"
             >
               <Avatar className="mr-4">
-                <AvatarImage src={session.profile.metadata?.picture?.optimized?.uri} />
+                <AvatarImage src={session.profile.metadata?.picture?.['optimized']?.uri || "/images/icons/default-user.svg"} />
                 <AvatarFallback>
                   <Image
                     className="rounded-full"
@@ -166,6 +184,23 @@ export function Nav() {
           </>
         )}
 
+        { !pushApi && (
+            <Button onClick={() => {
+                setPush(signer);
+              }}>
+              Subscribe to Notifications
+            </Button>
+          ) 
+        }
+        {
+          pushApi && (
+            <Button onClick={() => {
+              SendNotification(pushApi);
+            }}>
+              Send Notification
+            </Button>
+          )
+        }
         <ModeToggle />
       </div>
     </nav>
