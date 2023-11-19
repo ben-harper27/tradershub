@@ -6,7 +6,7 @@ import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ModeToggle } from "@/components/dropdown";
-import { ChevronRight, Droplets, LogIn, LogOut } from "lucide-react";
+import { ChevronRight, LogIn, LogOut } from "lucide-react";
 import {
   useLogin,
   useLogout,
@@ -16,6 +16,8 @@ import {
 import { useEffect, useState } from "react";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Image from "next/image";
 
 export function Nav() {
   const { execute: logoutLens } = useLogout();
@@ -102,8 +104,14 @@ export function Nav() {
     >
       <div className="py-3 px-8 flex flex-1 items-center p">
         <Link href="/" className="mr-5 flex items-center">
-          <Droplets className="opacity-85" size={19} />
-          <p className={`ml-2 mr-4 text-lg font-semibold`}>lenscn</p>
+          <Image
+            className="opacity-85"
+            src="/images/logos/logo.png"
+            width={19}
+            height={19}
+            alt="coinloop"
+          />
+          <p className={`ml-2 mr-4 text-lg text-custom-green font-semibold`}>coinloop</p>
         </Link>
         <Link
           href="/"
@@ -111,20 +119,6 @@ export function Nav() {
         >
           <p>Home</p>
         </Link>
-        <Link
-          href="/search"
-          className={`mr-5 text-sm ${pathname !== "/search" && "opacity-60"}`}
-        >
-          <p>Search</p>
-        </Link>
-        {isClient && isConnected && session && session.type === "WITH_PROFILE" && (
-          <Link
-            href="/profile"
-            className={`mr-5 text-sm ${pathname !== "/search" && "opacity-60"}`}
-          >
-            <p>Profile</p>
-          </Link>
-        )}
       </div>
       <div
         className="
@@ -148,10 +142,28 @@ export function Nav() {
           />
         )}
         {isClient && session && session.type === "WITH_PROFILE" && isConnected && (
-          <Button onClick={logout} variant="secondary" className="mr-4">
-            Sign Out
-            <LogOut className="h-4 w-4 ml-3" />
-          </Button>
+          <>
+            <Button onClick={logout} variant="secondary" className="mr-4">
+              Sign Out
+              <LogOut className="h-4 w-4 ml-3" />
+            </Button>
+            <Link
+              href="/profile"
+            >
+              <Avatar className="mr-4">
+                <AvatarImage src={session.profile.metadata?.picture?.optimized?.uri} />
+                <AvatarFallback>
+                  <Image
+                    className="rounded-full"
+                    src="/images/icons/default-user.svg"
+                    width={35}
+                    height={35}
+                    alt="user-image"
+                  />
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          </>
         )}
 
         <ModeToggle />
