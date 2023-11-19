@@ -12,8 +12,8 @@ export async function initPush(signer : ethers.providers.JsonRpcSigner) {
 
   // To listen to real time notifications
   //const stream = await userAlice.initStream([CONSTANTS.STREAM.NOTIF]);
-  const chainID = process.env.NEXT_PUBLIC_CHAIN_ID;
-  const pushChannelAdress = process.env.NEXT_PUBLIC_CHANNEL_ADDRESS;
+  const chainID = process.env.NEXT_PUBLIC_CHAIN_ID || "11155111";
+  const pushChannelAdress = process.env.NEXT_PUBLIC_CHANNEL_ADDRESS || "0x342E8bf072327708009FAa2E9045D9B1F6deC2b8";
 
   const response = await userAlice.notification.subscribe(
     `eip155:${chainID}:${pushChannelAdress}`,

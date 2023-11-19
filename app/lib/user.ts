@@ -1,9 +1,9 @@
 import prisma from "./prisma";
 
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async (wallet) => {
   const user = await prisma.User.findFirst({
     where: {
-      uid: userId,
+      wallet: wallet,
     },
   });
   return { userProfile: user };
