@@ -39,7 +39,7 @@ function Profile({ address }) {
                 <Avatar className="mr-4">
                   <AvatarImage
                     className="rounded-full"
-                    src={profile?.metadata?.picture?.optimized?.uri}
+                    src={profile?.metadata?.picture?.['optimized']?.uri || "/images/icons/default-user.svg"}
                   />
                   <AvatarFallback>
                     <Image
