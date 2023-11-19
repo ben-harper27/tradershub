@@ -6,3 +6,23 @@ datasource db {
   url = env("DATABASE_URL")
   relationMode = "prisma"
 }
+model User {
+  uid           String    @default(uuid()) @id
+  wallet        String    @unique
+  handle        String?
+  lensId        String?
+  riskScore     Float?
+  riskLevel     String?
+  location      String?
+  holdings      Holdings[]
+}
+
+model Holdings {
+  hid           String    @default(uuid()) @id
+  user          User      @relation(fields: [userId], references: [uid])
+  userId        String
+  ticker        String
+  value0d       Float
+  value7d       Float
+  value30d      Float
+}
