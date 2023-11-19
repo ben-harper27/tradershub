@@ -8,7 +8,7 @@ export async function initPush(signer : ethers.providers.JsonRpcSigner) {
   // Initialize wallet user
   // 'CONSTANTS.ENV.PROD' -> mainnet apps | 'CONSTANTS.ENV.STAGING' -> testnet apps
 
-  const userAlice =  await PushAPI.initialize(signer as any, { env: CONSTANTS.ENV.PROD });
+  const userAlice =  await PushAPI.initialize(signer as any, { env: CONSTANTS.ENV.STAGING });
 
   // To listen to real time notifications
   //const stream = await userAlice.initStream([CONSTANTS.STREAM.NOTIF]);
