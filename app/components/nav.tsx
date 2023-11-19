@@ -15,7 +15,8 @@ import { SendNotification } from './SendNotification';
 
 export function Nav() {
   const { open } = useWeb3Modal()
-  const { address } = useAccount()
+  const { address } = useAccount();
+  console.log(address);
   const pathname = usePathname();
   const signer = useEthersSigner();
 

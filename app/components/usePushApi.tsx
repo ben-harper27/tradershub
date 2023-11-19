@@ -8,10 +8,10 @@ export async function initPush(signer : ethers.providers.JsonRpcSigner) {
   // Initialize wallet user
   // 'CONSTANTS.ENV.PROD' -> mainnet apps | 'CONSTANTS.ENV.STAGING' -> testnet apps
 
-  const userAlice =  await PushAPI.initialize(signer as any, { env: CONSTANTS.ENV.STAGING });
+  const userAlice =  await PushAPI.initialize(signer as any, { env: CONSTANTS.ENV.PROD });
 
   // To listen to real time notifications
-  const stream = await userAlice.initStream([CONSTANTS.STREAM.NOTIF]);
+  //const stream = await userAlice.initStream([CONSTANTS.STREAM.NOTIF]);
   const chainID = process.env.NEXT_PUBLIC_CHAIN_ID;
   const pushChannelAdress = process.env.NEXT_PUBLIC_CHANNEL_ADDRESS;
 
@@ -19,13 +19,13 @@ export async function initPush(signer : ethers.providers.JsonRpcSigner) {
     `eip155:${chainID}:${pushChannelAdress}`,
   );
 
-  // Set stream event handling
-  stream.on(CONSTANTS.STREAM.NOTIF, (data) => {
-    console.log(data);
-  });
+  // // Set stream event handling
+  // stream.on(CONSTANTS.STREAM.NOTIF, (data) => {
+  //   console.log(data);
+  // });
 
   // Connect to stream
-  stream.connect();
+  //stream.connect();
 
   return userAlice;
 }
